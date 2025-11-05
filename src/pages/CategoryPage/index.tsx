@@ -2,36 +2,34 @@ import { useState } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
-import { useProdutos } from '../../hooks/useProdutos'
-import { useDeleteProduto } from '../../hooks/useDeleteProduto'
-import type { Produto } from '../../hooks/useProdutos'
-import { ProductModal } from '../ProductModal'
-import * as S from './style'
+import * as S from './styles'
+import { useCategorias, type Categoria } from '../../hooks/useCategorias'
+import { useDeleteCategoria } from '../../hooks/useDeleteCategorias'
 
-export const ProductTable = () => {
-  const { data, isLoading, error } = useProdutos()
-  const deleteMutation = useDeleteProduto()
+export const CategoryPage = () => {
+  const { data, isLoading, error } = useCategorias()
+  const deleteMutation = useDeleteCategoria()
 
   const [isModalVisible, setIsModalVisible] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<Produto | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<Categoria | null>(null)
 
   const handleDelete = (id: number) => {
-    if (confirm('Deseja realmente excluir este produto?')) {
+    if (confirm('Deseja realmente excluir esta categoria?')) {
       deleteMutation.mutate(id)
     }
   }
 
-  const handleEdit = (produto: Produto) => {
-    setSelectedProduct(produto)
+  const handleEdit = (categoria: Categoria) => {
+    setSelectedCategory(categoria)
     setIsModalVisible(true)
   }
 
   const handleCreate = () => {
-    setSelectedProduct(null)
+    setSelectedCategory(null)
     setIsModalVisible(true)
   }
 
-  const actionTemplate = (rowData: Produto) => (
+  const actionTemplate = (rowData: Categoria) => (
     <div style={{ display: 'flex', gap: '0.5rem' }}>
       <Button
         icon="pi pi-pencil"
@@ -46,18 +44,14 @@ export const ProductTable = () => {
     </div>
   )
 
-  if (isLoading) return <p>Carregando produtos...</p>
-  if (error) return <p>Erro ao carregar produtos</p>
+  if (isLoading) return <p>Carregando categorias...</p>
+  if (error) return <p>Erro ao carregar categorias</p>
 
   return (
     <S.Container>
       <S.Header>
-        <S.Title>📦 Gerenciar Produtos</S.Title>
-        <Button
-          label="Cadastrar Produto"
-          icon="pi pi-plus"
-          onClick={handleCreate}
-        />
+        <S.Title>🏷️ Gerenciar Categorias</S.Title>
+        <Button label="Cadastrar Categoria" icon="pi pi-plus" onClick={handleCreate} />
       </S.Header>
 
       <S.TableWrapper>
@@ -65,20 +59,18 @@ export const ProductTable = () => {
           value={data}
           paginator
           rows={5}
-          emptyMessage="Nenhum produto encontrado."
+          emptyMessage="Nenhuma categoria encontrada."
         >
           <Column field="id" header="ID" style={{ width: '8rem' }} />
           <Column field="nome" header="Nome" />
-          <Column field="preco" header="Preço" />
-          <Column field="categoria" header="Categoria" />
           <Column header="Ações" body={actionTemplate} style={{ width: '10rem' }} />
         </DataTable>
       </S.TableWrapper>
 
-      <ProductModal
+      <CategoryModal
         isVisible={isModalVisible}
         onHide={() => setIsModalVisible(false)}
-        productToEdit={selectedProduct}
+        categoryToEdit={selectedCategory}
       />
     </S.Container>
   )
