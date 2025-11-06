@@ -1,3 +1,4 @@
+import { Button } from 'primereact/button'
 import styled from 'styled-components'
 
 export const Container = styled.div`
@@ -30,5 +31,27 @@ export const TableWrapper = styled.div`
   .p-datatable-header {
     background-color: #f8f9fa;
     font-weight: 600;
+  }
+`
+export const StyledButton = styled(Button)`
+    background-color: #007ad9;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #005fa3;
+    transform: translateY(-1px);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(0, 122, 217, 0.3);
+  }
+
+  .p-button-icon {
+    margin-right: 0.5rem;
   }
 `

@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
-import { Button } from 'primereact/button'
 import { useProdutos } from '../../hooks/useProdutos'
 import { useDeleteProduto } from '../../hooks/useDeleteProduto'
 import type { Produto } from '../../hooks/useProdutos'
 import { ProductModal } from '../ProductModal'
 import * as S from './style'
+import { Button } from 'primereact/button'
 
 export const ProductTable = () => {
   const { data, isLoading, error } = useProdutos()
+  console.log('📦 Dados vindos da API:', data)
   const deleteMutation = useDeleteProduto()
 
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -32,19 +33,24 @@ export const ProductTable = () => {
   }
 
   const actionTemplate = (rowData: Produto) => (
-    <div style={{ display: 'flex', gap: '0.5rem' }}>
+    <div style={{ display: "flex", gap: "0.5rem" }}>
       <Button
         icon="pi pi-pencil"
+        type='button'
         className="p-button-rounded p-button-text p-button-info"
         onClick={() => handleEdit(rowData)}
       />
       <Button
         icon="pi pi-trash"
         className="p-button-rounded p-button-text p-button-danger"
-        onClick={() => handleDelete(rowData.id)}
+        onClick={() => {
+          if (rowData.id !== null && rowData.id !== undefined) {
+            handleDelete(rowData.id);
+          }
+        }}
       />
     </div>
-  )
+  );
 
   if (isLoading) return <p>Carregando produtos...</p>
   if (error) return <p>Erro ao carregar produtos</p>
@@ -53,7 +59,7 @@ export const ProductTable = () => {
     <S.Container>
       <S.Header>
         <S.Title>📦 Gerenciar Produtos</S.Title>
-        <Button
+        <S.StyledButton
           label="Cadastrar Produto"
           icon="pi pi-plus"
           onClick={handleCreate}
@@ -61,7 +67,7 @@ export const ProductTable = () => {
       </S.Header>
 
       <S.TableWrapper>
-        <DataTable
+       <DataTable
           value={data}
           paginator
           rows={5}
@@ -69,8 +75,14 @@ export const ProductTable = () => {
         >
           <Column field="id" header="ID" style={{ width: '8rem' }} />
           <Column field="nome" header="Nome" />
-          <Column field="preco" header="Preço" />
-          <Column field="categoria" header="Categoria" />
+          <Column
+            header="Preço"
+            body={(rowData: Produto) => `R$ ${rowData.precoUnitario.toFixed(2)}`}
+          />
+          <Column
+            header="Categoria"
+            body={(rowData: Produto) => rowData.categoria?.nome || 'Sem categoria'}
+          />
           <Column header="Ações" body={actionTemplate} style={{ width: '10rem' }} />
         </DataTable>
       </S.TableWrapper>

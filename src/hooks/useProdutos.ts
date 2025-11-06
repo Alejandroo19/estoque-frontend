@@ -4,14 +4,41 @@ import { api } from '../services/api'
 export type Produto = {
   id: number
   nome: string
-  preco: number
-  categoria: string
+  precoUnitario: number
+  unidade: string
+  quantidadeEstoque: number
+  quantidadeMinima?: number
+  quantidadeMaxima?: number
+  categoria: { id: number; nome?: string } | null
 }
 
-const fetchProdutos = async (): Promise<Produto[]> => {
-  const response = await api.get('/produtos')
-  return response.data
-}
+export type ProdutoPayload = Omit<Produto, 'id'> & { id?: number | null }
+
+  const fetchProdutos = async (): Promise<Produto[]> => {
+    const response = await api.get<
+      {
+        id: number
+        nome: string
+        preco?: number
+        precoUnitario?: number
+        categoria?: string
+      }[]
+    >('/produtos')
+
+    return response.data.map((p) => ({
+      id: p.id,
+      nome: p.nome,
+      precoUnitario: p.precoUnitario ?? p.preco ?? 0,
+      unidade: 'un',
+      quantidadeEstoque: 0,
+      quantidadeMinima: 0,
+      quantidadeMaxima: 0,
+      categoria: p.categoria
+        ? { id: 0, nome: p.categoria }
+        : null,
+    }))
+  }
+
 
 export const useProdutos = () => {
   return useQuery({

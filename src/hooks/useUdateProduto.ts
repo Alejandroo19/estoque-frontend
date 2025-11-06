@@ -7,7 +7,7 @@ export const useUpdateProduto = () => {
 
   return useMutation({
     mutationFn: async (produto: Produto) => {
-      const response = await api.put(`/produtos/${produto.id}`, produto)
+      const response = await api.put<Produto>(`/produtos/${produto.id}`, produto)
       return response.data
     },
     onSuccess: () => {

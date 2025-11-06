@@ -5,6 +5,7 @@ import { Button } from 'primereact/button'
 import * as S from './styles'
 import { useCategorias, type Categoria } from '../../hooks/useCategorias'
 import { useDeleteCategoria } from '../../hooks/useDeleteCategorias'
+import { CategoryModal } from '../../components/CategoryModal'
 
 export const CategoryPage = () => {
   const { data, isLoading, error } = useCategorias()
@@ -51,7 +52,7 @@ export const CategoryPage = () => {
     <S.Container>
       <S.Header>
         <S.Title>🏷️ Gerenciar Categorias</S.Title>
-        <Button label="Cadastrar Categoria" icon="pi pi-plus" onClick={handleCreate} />
+        <S.StyledButton label="Cadastrar Categoria" icon="pi pi-plus" onClick={handleCreate} />
       </S.Header>
 
       <S.TableWrapper>

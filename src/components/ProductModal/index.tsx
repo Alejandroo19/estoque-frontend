@@ -1,11 +1,9 @@
-import { Dialog } from 'primereact/dialog'
-import { InputText } from 'primereact/inputtext'
-import { Button } from 'primereact/button'
 import { useEffect, useState } from 'react'
-import type { Produto } from '../../hooks/useProdutos'
+import type { Produto, ProdutoPayload } from '../../hooks/useProdutos'
 import * as S from './styles'
 import { useCreateProduto } from '../../hooks/useCreateProduto'
 import { useUpdateProduto } from '../../hooks/useUdateProduto'
+import { useCategorias } from '../../hooks/useCategorias'
 
 type ProductModalProps = {
   isVisible: boolean
@@ -19,39 +17,63 @@ export const ProductModal = ({ isVisible, onHide, productToEdit }: ProductModalP
 
   const [nome, setNome] = useState('')
   const [preco, setPreco] = useState('')
-  const [categoria, setCategoria] = useState('')
+  const [categoria, setCategoria] = useState<number | null>(null)
 
-  useEffect(() => {
-    if (productToEdit) {
-      setNome(productToEdit.nome)
-      setPreco(productToEdit.preco.toString())
-      setCategoria(productToEdit.categoria || '')
-    } else {
-      setNome('')
-      setPreco('')
-      setCategoria('')
-    }
-  }, [productToEdit])
+  const { data: categorias } = useCategorias()
+
+useEffect(() => {
+  if (productToEdit) {
+    setNome(productToEdit.nome ?? '');
+
+    const precoSeguro =
+      typeof productToEdit.precoUnitario === 'number'
+        ? productToEdit.precoUnitario.toString()
+        : '';
+
+    setPreco(precoSeguro);
+
+    const categoriaCorrespondente = categorias?.find(
+      (cat) => cat.id === productToEdit.categoria?.id ||
+               cat.nome === productToEdit.categoria?.nome
+    );
+
+    setCategoria(categoriaCorrespondente?.id ?? null);
+  } else {
+    setNome('');
+    setPreco('');
+    setCategoria(null);
+  }
+}, [productToEdit, categorias]);
 
   const handleSubmit = () => {
-    const produto: Produto = {
-      id: productToEdit?.id ?? 0,
-      nome,
-      preco: Number(preco),
-      categoria,
+    const precoNumber = parseFloat(preco)
+    if (isNaN(precoNumber) || precoNumber <= 0) {
+      alert('Por favor, insira um preço válido.')
+      return
     }
 
-    if (productToEdit) {
-      updateMutation.mutate(produto)
-    } else {
-      createMutation.mutate(produto)
-    }
+  const produtoPayload: ProdutoPayload = {
+    id: productToEdit?.id ?? undefined,
+    nome,
+    precoUnitario: precoNumber,
+    unidade: 'un',
+    quantidadeEstoque: 0,
+    quantidadeMinima: 0,
+    quantidadeMaxima: 0,
+    categoria: categoria ? { id: categoria } : null,
+  }
+
+  if (productToEdit) {
+    updateMutation.mutate(produtoPayload as Produto)
+  } else {
+    createMutation.mutate(produtoPayload)
+  }
 
     onHide()
   }
 
   return (
-    <Dialog
+    <S.StyledDialog
       header={productToEdit ? 'Editar Produto' : 'Cadastrar Produto'}
       visible={isVisible}
       onHide={onHide}
@@ -60,21 +82,27 @@ export const ProductModal = ({ isVisible, onHide, productToEdit }: ProductModalP
       <S.FormContainer>
         <S.FieldGroup>
           <label htmlFor="nome">Nome</label>
-          <InputText id="nome" value={nome} onChange={(e) => setNome(e.target.value)} />
+          <S.StyledInput id="nome" value={nome} onChange={(e) => setNome(e.target.value)} />
         </S.FieldGroup>
 
         <S.FieldGroup>
           <label htmlFor="preco">Preço</label>
-          <InputText id="preco" value={preco} onChange={(e) => setPreco(e.target.value)} />
+          <S.StyledInput id="preco" value={preco} onChange={(e) => setPreco(e.target.value)} />
         </S.FieldGroup>
 
         <S.FieldGroup>
           <label htmlFor="categoria">Categoria</label>
-          <InputText id="categoria" value={categoria} onChange={(e) => setCategoria(e.target.value)} />
+          <S.StyledDropdown
+            id="categoria"
+            value={categoria}
+            options={categorias?.map((cat) => ({ label: cat.nome, value: cat.id })) || []}
+            onChange={(e) => setCategoria(e.value)}
+            appendTo="self"
+          />
         </S.FieldGroup>
 
         <S.ButtonsWrapper>
-          <Button
+          <S.StyledButton
             label={productToEdit ? 'Salvar alterações' : 'Cadastrar'}
             icon="pi pi-check"
             onClick={handleSubmit}
@@ -82,6 +110,6 @@ export const ProductModal = ({ isVisible, onHide, productToEdit }: ProductModalP
           />
         </S.ButtonsWrapper>
       </S.FormContainer>
-    </Dialog>
+    </S.StyledDialog>
   )
 }
