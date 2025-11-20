@@ -1,10 +1,8 @@
-// styles.ts (Para o DeleteModal e outros componentes)
 
 import styled from 'styled-components';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 
-// --- 1. ESTILOS DE CONTAINER E AGRUPAMENTO (REUTILIZÁVEIS) ---
 
 export const FormContainer = styled.div`
   display: flex;
@@ -20,9 +18,6 @@ export const ButtonsWrapper = styled.div`
   gap: 10px; /* Adicionado gap para espaçamento entre botões */
 `;
 
-// --- 2. ESTILIZAÇÃO DO DIALOG (REUTILIZADA) ---
-
-// Este estilo simula a aparência do seu StyledDialog anterior
 export const StyledDialog = styled(Dialog)`
   .p-dialog-content {
     padding: 2rem;
@@ -51,9 +46,6 @@ export const StyledDialog = styled(Dialog)`
   }
 `;
 
-// --- 3. ESTILIZAÇÃO DOS BOTÕES (REUTILIZADA) ---
-
-// Estilo para o botão primário (usado no "Deletar")
 export const StyledButton = styled(Button)`
   background-color: ${props => (props.severity === 'danger' ? '#c0392b' : '#007ad9')};
   border: none;
@@ -77,8 +69,6 @@ export const StyledButton = styled(Button)`
       box-shadow: none;
   }
 `;
-
-// --- 4. ESTILO ESPECÍFICO PARA A MENSAGEM DO DELETE MODAL ---
 
 export const DeleteMessageContainer = styled.div`
   /* Estiliza o conteúdo da mensagem do modal */

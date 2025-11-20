@@ -23,22 +23,18 @@ export const CategoryPage = () => {
   const handleDeleteClick = (id: number, nomeProduto: string) => {
     setIdToDelete(id);
     setNameToDelete(nomeProduto);
-    setShowDeleteModal(true); // Abre o modal
+    setShowDeleteModal(true); 
   };
 
   const handleConfirmDelete = () => {
     if (idToDelete !== null) {
       deleteMutation.mutate(idToDelete, {
         onSuccess: () => {
-          // Limpa os estados e fecha o modal em caso de sucesso
           setShowDeleteModal(false);
           setIdToDelete(null);
-          // Aqui você também deve mostrar o Toast de sucesso!
         },
         onError: () => {
-          // Trata o erro e fecha o modal
           setShowDeleteModal(false);
-          // Aqui você também deve mostrar o Toast de erro!
         },
       });
     }
@@ -100,11 +96,10 @@ export const CategoryPage = () => {
       <DeleteModal
         isVisible={showDeleteModal}
         onHide={() => {
-          setShowDeleteModal(false); // Fecha o modal ao clicar fora ou em Cancelar
-          setIdToDelete(null);       // Limpa o ID selecionado
+          setShowDeleteModal(false); 
+          setIdToDelete(null);       
         }}
         onConfirm={handleConfirmDelete}
-        // Monta a string para o modal
         itemName={`o produto '${nameToDelete ?? 'selecionado'}'`}
         isDeleting={deleteMutation.isPending}
       />
