@@ -2,7 +2,7 @@ import { Button } from 'primereact/button'
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  min-height: calc(100vh - 70px); /* 100vh menos o menu/header, ajuste se precisar */
+  min-height: calc(100vh - 70px); /* 100vh menos o menu/header*/
   width: 100%;
   display: flex;
   flex-direction: column;

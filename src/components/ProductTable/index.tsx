@@ -8,6 +8,7 @@ import { ProductModal } from '../ProductModal'
 import * as S from './style'
 import { Button } from 'primereact/button'
 import { TableWrapper } from '../../styles/components/TableStyles'
+import { DeleteModal } from '../deleteModal'
 
 export const ProductTable = () => {
   const { data, isLoading, error } = useProdutos()
@@ -16,11 +17,33 @@ export const ProductTable = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Produto | null>(null)
 
-  const handleDelete = (id: number) => {
-    if (confirm('Deseja realmente excluir este produto?')) {
-      deleteMutation.mutate(id)
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [idToDelete, setIdToDelete] = useState<number | null>(null);
+  const [nameToDelete, setNameToDelete] = useState<string | null>(null);
+
+  const handleDeleteClick = (id: number, nomeProduto: string) => {
+    setIdToDelete(id);
+    setNameToDelete(nomeProduto);
+    setShowDeleteModal(true); // Abre o modal
+  };
+
+  const handleConfirmDelete = () => {
+    if (idToDelete !== null) {
+      deleteMutation.mutate(idToDelete, {
+        onSuccess: () => {
+          // Limpa os estados e fecha o modal em caso de sucesso
+          setShowDeleteModal(false);
+          setIdToDelete(null);
+          // Aqui você também deve mostrar o Toast de sucesso!
+        },
+        onError: () => {
+          // Trata o erro e fecha o modal
+          setShowDeleteModal(false);
+          // Aqui você também deve mostrar o Toast de erro!
+        },
+      });
     }
-  }
+  };
 
   const handleEdit = (produto: Produto) => {
     setSelectedProduct(produto)
@@ -45,7 +68,7 @@ export const ProductTable = () => {
         className="p-button-rounded p-button-text p-button-danger"
         onClick={() => {
           if (rowData.id !== null && rowData.id !== undefined) {
-            handleDelete(rowData.id);
+            handleDeleteClick(rowData.id, rowData.nome);
           }
         }}
       />
@@ -67,10 +90,10 @@ export const ProductTable = () => {
       </S.Header>
 
       <TableWrapper>
-       <DataTable
+        <DataTable
           value={data}
           paginator
-          rows={10}
+          rows={8}
           emptyMessage="Nenhum produto encontrado."
         >
           <Column field="id" header="ID" style={{ width: '8rem' }} />
@@ -96,6 +119,17 @@ export const ProductTable = () => {
         isVisible={isModalVisible}
         onHide={() => setIsModalVisible(false)}
         productToEdit={selectedProduct}
+      />
+      <DeleteModal
+        isVisible={showDeleteModal}
+        onHide={() => {
+          setShowDeleteModal(false); // Fecha o modal ao clicar fora ou em Cancelar
+          setIdToDelete(null);       // Limpa o ID selecionado
+        }}
+        onConfirm={handleConfirmDelete}
+        // Monta a string para o modal
+        itemName={`o produto '${nameToDelete ?? 'selecionado'}'`}
+        isDeleting={deleteMutation.isPending}
       />
     </S.Container>
   )

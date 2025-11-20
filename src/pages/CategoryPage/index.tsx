@@ -7,6 +7,7 @@ import { useCategorias, type Categoria } from '../../hooks/useCategorias'
 import { useDeleteCategoria } from '../../hooks/useDeleteCategorias'
 import { CategoryModal } from '../../components/CategoryModal'
 import { TableWrapper } from '../../styles/components/TableStyles'
+import { DeleteModal } from '../../components/deleteModal'
 
 export const CategoryPage = () => {
   const { data, isLoading, error } = useCategorias()
@@ -15,11 +16,33 @@ export const CategoryPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<Categoria | null>(null)
 
-  const handleDelete = (id: number) => {
-    if (confirm('Deseja realmente excluir esta categoria?')) {
-      deleteMutation.mutate(id)
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [idToDelete, setIdToDelete] = useState<number | null>(null);
+  const [nameToDelete, setNameToDelete] = useState<string | null>(null);
+
+  const handleDeleteClick = (id: number, nomeProduto: string) => {
+    setIdToDelete(id);
+    setNameToDelete(nomeProduto);
+    setShowDeleteModal(true); // Abre o modal
+  };
+
+  const handleConfirmDelete = () => {
+    if (idToDelete !== null) {
+      deleteMutation.mutate(idToDelete, {
+        onSuccess: () => {
+          // Limpa os estados e fecha o modal em caso de sucesso
+          setShowDeleteModal(false);
+          setIdToDelete(null);
+          // Aqui você também deve mostrar o Toast de sucesso!
+        },
+        onError: () => {
+          // Trata o erro e fecha o modal
+          setShowDeleteModal(false);
+          // Aqui você também deve mostrar o Toast de erro!
+        },
+      });
     }
-  }
+  };
 
   const handleEdit = (categoria: Categoria) => {
     setSelectedCategory(categoria)
@@ -41,7 +64,7 @@ export const CategoryPage = () => {
       <Button
         icon="pi pi-trash"
         className="p-button-rounded p-button-text p-button-danger"
-        onClick={() => handleDelete(rowData.id)}
+        onClick={() => handleDeleteClick(rowData.id, rowData.nome)}
       />
     </div>
   )
@@ -73,6 +96,17 @@ export const CategoryPage = () => {
         isVisible={isModalVisible}
         onHide={() => setIsModalVisible(false)}
         categoryToEdit={selectedCategory}
+      />
+      <DeleteModal
+        isVisible={showDeleteModal}
+        onHide={() => {
+          setShowDeleteModal(false); // Fecha o modal ao clicar fora ou em Cancelar
+          setIdToDelete(null);       // Limpa o ID selecionado
+        }}
+        onConfirm={handleConfirmDelete}
+        // Monta a string para o modal
+        itemName={`o produto '${nameToDelete ?? 'selecionado'}'`}
+        isDeleting={deleteMutation.isPending}
       />
     </S.Container>
   )
