@@ -36,7 +36,7 @@ export const ProductModal = ({
         typeof productToEdit.precoUnitario === "number"
           ? productToEdit.precoUnitario.toString()
           : "";
-
+      
       setPreco(precoSeguro);
 
       const categoriaCorrespondente = categorias?.find(
@@ -54,7 +54,8 @@ export const ProductModal = ({
   }, [productToEdit, categorias]);
 
   const handleSubmit = () => {
-    const precoNumber = parseFloat(preco);
+    const precoLimpo = preco.replace(",", ".");
+    const precoNumber = parseFloat(precoLimpo);
 
     if (!nome.trim()) {
       toast.current?.show({
