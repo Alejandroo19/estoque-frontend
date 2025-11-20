@@ -70,7 +70,7 @@ export const ProductTable = () => {
        <DataTable
           value={data}
           paginator
-          rows={5}
+          rows={10}
           emptyMessage="Nenhum produto encontrado."
         >
           <Column field="id" header="ID" style={{ width: '8rem' }} />
