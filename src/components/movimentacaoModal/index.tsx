@@ -20,42 +20,77 @@ export const MovimentacaoModal = ({ isVisible, onHide }: MovimentacaoModalProps)
   const [quantidade, setQuantidade] = useState<number>(0)
   const [tipo, setTipo] = useState<'ENTRADA' | 'SAIDA' | null>(null)
 
-    const handleSubmit = () => {
+  const handleSubmit = () => {
     if (!produtoId || !tipo || quantidade <= 0) {
-        toast.current?.show({
+      toast.current?.show({
         severity: 'error',
         summary: 'Erro de Validação',
         detail: 'Preencha todos os campos corretamente.',
         life: 3000,
-        })
-        return
+      })
+      return
+    }
+
+    // Find the selected product to check min/max quantities
+    const produtoSelecionado = produtos?.find(p => p.id === produtoId)
+
+    if (produtoSelecionado) {
+      const estoqueAtual = produtoSelecionado.quantidadeEstoque
+      const quantidadeMinima = produtoSelecionado.quantidadeMinima ?? 0
+      const quantidadeMaxima = produtoSelecionado.quantidadeMaxima ?? 0
+
+      let novoEstoque = estoqueAtual
+
+      if (tipo === 'ENTRADA') {
+        novoEstoque = estoqueAtual + quantidade
+
+        if (quantidadeMaxima > 0 && novoEstoque > quantidadeMaxima) {
+          toast.current?.show({
+            severity: 'warn',
+            summary: 'Atenção',
+            detail: `O estoque ficará acima do máximo (${quantidadeMaxima}). Novo estoque: ${novoEstoque}`,
+            life: 4000,
+          })
+        }
+      } else if (tipo === 'SAIDA') {
+        novoEstoque = estoqueAtual - quantidade
+
+        if (quantidadeMinima > 0 && novoEstoque < quantidadeMinima) {
+          toast.current?.show({
+            severity: 'warn',
+            summary: 'Atenção',
+            detail: `O estoque ficará abaixo do mínimo (${quantidadeMinima}). Novo estoque: ${novoEstoque}`,
+            life: 4000,
+          })
+        }
+      }
     }
 
     createMutation.mutate(
-        { produto: { id: produtoId }, tipo, quantidade },
-        {
+      { produto: { id: produtoId }, tipo, quantidade },
+      {
         onSuccess: () => {
-            toast.current?.show({
+          toast.current?.show({
             severity: 'success',
             summary: 'Sucesso',
             detail: 'Movimentação registrada com sucesso!',
             life: 3000,
-            })
-            onHide()
+          })
+          onHide()
         },
         onError: (error: AxiosError<{ message: string }>) => {
-            const apiMessage = error.response?.data?.message ?? 'Erro ao registrar movimentação.'
+          const apiMessage = error.response?.data?.message ?? 'Erro ao registrar movimentação.'
 
-            toast.current?.show({
+          toast.current?.show({
             severity: 'warn',
             summary: 'Aviso',
             detail: apiMessage,
             life: 3000,
-            })
+          })
         },
-        }
+      }
     )
-    }
+  }
   return (
     <>
       <Toast ref={toast} />
@@ -63,6 +98,7 @@ export const MovimentacaoModal = ({ isVisible, onHide }: MovimentacaoModalProps)
         header="Registrar Movimentação"
         visible={isVisible}
         onHide={onHide}
+        draggable={false}
         style={{ width: '400px' }}
       >
         <S.FormContainer>

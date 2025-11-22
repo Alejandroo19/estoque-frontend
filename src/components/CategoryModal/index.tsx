@@ -44,10 +44,10 @@ export const CategoryModal = ({
 
     if (categoryToEdit) {
       const categoriaAtualizada: Categoria = {
-          id: categoryToEdit.id,
-          nome,
-          ...(categoryToEdit.tamanho !== undefined && { tamanho: categoryToEdit.tamanho }),
-          ...(categoryToEdit.embalagem !== undefined && { embalagem: categoryToEdit.embalagem }),
+        id: categoryToEdit.id,
+        nome,
+        ...(categoryToEdit.tamanho !== undefined && { tamanho: categoryToEdit.tamanho }),
+        ...(categoryToEdit.embalagem !== undefined && { embalagem: categoryToEdit.embalagem }),
       };
 
       updateMutation.mutate(categoriaAtualizada);
@@ -64,33 +64,34 @@ export const CategoryModal = ({
 
   return (
     <>
-    <S.StyledToast ref={toast} />
-    <S.StyledDialog
-      header={categoryToEdit ? "Editar Categoria" : "Cadastrar Categoria"}
-      visible={isVisible}
-      onHide={onHide}
-      style={{ width: "400px" }}
-    >
-      <S.FormContainer>
-        <S.FieldGroup>
-          <label htmlFor="nome">Nome</label>
-          <S.StyledInput
-            id="nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-          />
-        </S.FieldGroup>
+      <S.StyledToast ref={toast} />
+      <S.StyledDialog
+        header={categoryToEdit ? "Editar Categoria" : "Cadastrar Categoria"}
+        visible={isVisible}
+        onHide={onHide}
+        draggable={false}
+        style={{ width: "400px" }}
+      >
+        <S.FormContainer>
+          <S.FieldGroup>
+            <label htmlFor="nome">Nome</label>
+            <S.StyledInput
+              id="nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+            />
+          </S.FieldGroup>
 
-        <S.ButtonsWrapper>
-          <S.StyledButton
-            label={categoryToEdit ? "Salvar Alterações" : "Cadastrar"}
-            icon="pi pi-check"
-            onClick={handleSubmit}
-            loading={createMutation.isPending || updateMutation.isPending}
-          />
-        </S.ButtonsWrapper>
-      </S.FormContainer>
-    </S.StyledDialog>
+          <S.ButtonsWrapper>
+            <S.StyledButton
+              label={categoryToEdit ? "Salvar Alterações" : "Cadastrar"}
+              icon="pi pi-check"
+              onClick={handleSubmit}
+              loading={createMutation.isPending || updateMutation.isPending}
+            />
+          </S.ButtonsWrapper>
+        </S.FormContainer>
+      </S.StyledDialog>
     </>
   );
 };

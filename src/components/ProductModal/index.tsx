@@ -27,6 +27,8 @@ export const ProductModal = ({
   const [nome, setNome] = useState("");
   const [preco, setPreco] = useState("");
   const [categoria, setCategoria] = useState<number | null>(null);
+  const [quantidadeMinima, setQuantidadeMinima] = useState<number>(0);
+  const [quantidadeMaxima, setQuantidadeMaxima] = useState<number>(0);
 
   useEffect(() => {
     if (productToEdit) {
@@ -36,7 +38,7 @@ export const ProductModal = ({
         typeof productToEdit.precoUnitario === "number"
           ? productToEdit.precoUnitario.toString()
           : "";
-      
+
       setPreco(precoSeguro);
 
       const categoriaCorrespondente = categorias?.find(
@@ -46,10 +48,14 @@ export const ProductModal = ({
       );
 
       setCategoria(categoriaCorrespondente?.id ?? null);
+      setQuantidadeMinima(productToEdit.quantidadeMinima ?? 0);
+      setQuantidadeMaxima(productToEdit.quantidadeMaxima ?? 0);
     } else {
       setNome("");
       setPreco("");
       setCategoria(null);
+      setQuantidadeMinima(0);
+      setQuantidadeMaxima(0);
     }
   }, [productToEdit, categorias]);
 
@@ -92,9 +98,9 @@ export const ProductModal = ({
       nome,
       precoUnitario: precoNumber,
       unidade: "un",
-      quantidadeEstoque: 0,
-      quantidadeMinima: 0,
-      quantidadeMaxima: 0,
+      quantidadeEstoque: productToEdit?.quantidadeEstoque ?? 0,
+      quantidadeMinima,
+      quantidadeMaxima,
       categoria: categoria ? { id: categoria } : null,
     };
 
@@ -157,6 +163,7 @@ export const ProductModal = ({
         header={productToEdit ? "Editar Produto" : "Cadastrar Produto"}
         visible={isVisible}
         onHide={onHide}
+        draggable={false}
         style={{ width: "400px" }}
       >
         <S.FormContainer>
@@ -198,6 +205,30 @@ export const ProductModal = ({
               }
               onChange={(e) => setCategoria(e.value)}
               appendTo="self"
+            />
+          </S.FieldGroup>
+
+          <S.FieldGroup>
+            <label htmlFor="quantidadeMinima">Quantidade Mínima</label>
+            <S.StyledInput
+              id="quantidadeMinima"
+              type="number"
+              inputMode="numeric"
+              value={quantidadeMinima.toString()}
+              onChange={(e) => setQuantidadeMinima(Number(e.target.value) || 0)}
+              placeholder="0"
+            />
+          </S.FieldGroup>
+
+          <S.FieldGroup>
+            <label htmlFor="quantidadeMaxima">Quantidade Máxima</label>
+            <S.StyledInput
+              id="quantidadeMaxima"
+              type="number"
+              inputMode="numeric"
+              value={quantidadeMaxima.toString()}
+              onChange={(e) => setQuantidadeMaxima(Number(e.target.value) || 0)}
+              placeholder="0"
             />
           </S.FieldGroup>
 
