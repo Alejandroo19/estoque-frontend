@@ -2,13 +2,16 @@ import styled from 'styled-components'
 
 export const TableWrapper = styled.div`
   width: 100%;
-  overflow-x: auto;
   border-radius: 25px;
 
   .p-datatable {
     width: 100%;
     border-radius: 12px;
     border: 1px solid #e5e7eb;
+  }
+
+  .p-datatable-wrapper {
+    overflow: visible !important;
   }
 
   .p-datatable-thead > tr > th {

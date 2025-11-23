@@ -37,7 +37,6 @@ export const Title = styled.h2`
 
 export const TableWrapper = styled.div`
   width: 100%;
-  overflow-x: auto;
   border-radius: ${({ theme }) => theme.borderRadius};
 
   .p-datatable {

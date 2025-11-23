@@ -49,25 +49,19 @@ export const GlobalStyle = createGlobalStyle`
     box-shadow: none !important;
   }
 
-  /* Custom scrollbar with purple theme */
-  ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-  }
+  /* Custom scrollbar with neutral theme */
 
   ::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.borderLight};
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.gradients.primary};
+    background: rgba(100, 100, 100, 0.5);
     border-radius: 10px;
-    border: 2px solid ${({ theme }) => theme.colors.borderLight};
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: ${({ theme }) => theme.gradients.dark};
+    background: rgba(100, 100, 100, 0.7);
   }
 
   /* Toast styling */
