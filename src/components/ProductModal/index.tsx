@@ -164,7 +164,7 @@ export const ProductModal = ({
         visible={isVisible}
         onHide={onHide}
         draggable={false}
-        style={{ width: "400px" }}
+        style={{ width: "450px" }}
       >
         <S.FormContainer>
           <S.FieldGroup>
@@ -172,7 +172,7 @@ export const ProductModal = ({
             <S.StyledInput
               id="nome"
               value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              onChange={(event) => setNome(event.target.value)}
             />
           </S.FieldGroup>
 
@@ -183,8 +183,8 @@ export const ProductModal = ({
               type="text"
               inputMode="numeric"
               value={formatCurrency(preco)}
-              onChange={(e) => {
-                const raw = e.target.value;
+              onChange={(event) => {
+                const raw = event.target.value;
                 const unformatted = unformatCurrency(raw);
                 setPreco(unformatted);
               }}

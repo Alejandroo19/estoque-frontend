@@ -44,7 +44,7 @@ export const StyledDialog = styled(Dialog)`
     padding: 1.5rem 2rem;
     border-radius: 12px 12px 0 0;
     background-color: #f9fafb;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e1e1e1ff;
     font-weight: 600;
     color: #333;
   }
@@ -61,7 +61,7 @@ export const StyledInput = styled(InputNumber)`
     width: 100%;
     height: 42px;
     padding: 0.6rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid #d4dbe5ff;
     border-radius: 8px;
     font-size: 0.95rem;
     color: #333;
