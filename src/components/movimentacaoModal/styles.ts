@@ -37,14 +37,14 @@ export const ButtonsWrapper = styled.div`
 export const StyledDialog = styled(Dialog)`
   .p-dialog-content {
     padding: 2rem !important;
-    border-radius: 0 0 12px 12px;
+    border-radius: 0 0 13px 13px;
   }
 
   .p-dialog-header {
     padding: 1.5rem 2rem;
-    border-radius: 12px 12px 0 0;
-    background-color: #f9fafb;
-    border-bottom: 1px solid #e1e1e1ff;
+    border-radius: 13px 13px 0 0;
+    background-color: #f9fafc;
+    border-bottom: 1px solid #e1e1e2ff;
     font-weight: 600;
     color: #333;
   }
