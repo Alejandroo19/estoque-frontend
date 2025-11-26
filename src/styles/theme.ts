@@ -1,40 +1,36 @@
-export const theme = {
+export const themeEmerald = {
   colors: {
-    // Primary colors - Dark Purple/Violet
-    primary: '#8b5cf6',
-    primaryHover: '#7c3aed',
-    primaryLight: '#ede9fe',
+    primary: '#10b981',
+    primaryHover: '#059669',
+    primaryLight: '#d1fae5',
 
-    // Status colors
-    success: '#10b981',
-    successLight: '#d1fae5',
+    success: '#22c55e',
+    successLight: '#dcfce7',
     danger: '#ef4444',
     dangerLight: '#fee2e2',
     warning: '#f59e0b',
     warningLight: '#fef3c7',
-    info: '#3b82f6',
+    info: '#0ea5e9',
     infoLight: '#dbeafe',
 
-    // Neutral colors
-    background: '#f8fafc',
+    background: '#f0fdf4',
     surface: '#ffffff',
-    text: '#1e293b',
-    textSecondary: '#64748b',
-    border: '#e2e8f1',
-    borderLight: '#f1f5fa',
+    text: '#064e3b',
+    textSecondary: '#065f46',
+    border: '#d1fae5',
+    borderLight: '#ecfdf5',
 
-    // Table colors
-    tableHeader: '#faf5ff',
-    tableText: '#1e293b',
-    tableHover: '#f5f3ff',
+    tableHeader: '#ecfdf5',
+    tableText: '#064e3b',
+    tableHover: '#d1fae5',
   },
   gradients: {
-    primary: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
-    dark: 'linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%)',
-    subtle: 'linear-gradient(135deg, #faf5ff 0%, #ffffff 100%)',
+    primary: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    dark: 'linear-gradient(135deg, #047857 0%, #064e3b 100%)',
+    subtle: 'linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%)',
   },
   borderRadius: '13px',
-  shadow: '0 4px 12px rgba(139, 92, 246, 0.11)',
-  shadowMd: '0 8px 24px rgba(139, 92, 246, 0.16)',
-  shadowLg: '0 12px 40px rgba(139, 92, 246, 0.21)',
-}
+  shadow: '0 4px 12px rgba(16, 185, 129, 0.12)',
+  shadowMd: '0 8px 24px rgba(16, 185, 129, 0.18)',
+  shadowLg: '0 12px 40px rgba(16, 185, 129, 0.22)',
+};
